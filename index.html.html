@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Электрическая мощность — интерактив</title>
+  <style>
+    :root{--bg:#f6f8fb;--card:#fff;--text:#1f2937;--muted:#667085;--blue:#2f6fed;--blue-soft:#eaf1ff;--orange-soft:#fff5df;--shadow:0 14px 34px rgba(31,41,55,.10)}
+    *{box-sizing:border-box} body{margin:0;font-family:Inter,Segoe UI,Arial,sans-serif;background:var(--bg);color:var(--text)}
+    .widget{max-width:980px;margin:0 auto;padding:24px}.lesson-card{background:var(--card);border:1px solid #e5e7eb;border-radius:22px;box-shadow:var(--shadow);overflow:hidden}
+    .header{padding:28px 28px 18px;border-bottom:1px solid #edf0f4;background:linear-gradient(180deg,#fff 0%,#fbfcfe 100%)}
+    .eyebrow{display:inline-block;font-size:13px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;color:var(--blue);background:var(--blue-soft);padding:6px 10px;border-radius:999px;margin-bottom:12px}
+    h1{margin:0;font-size:32px;line-height:1.15;font-weight:800}.intro{margin:10px 0 0;color:var(--muted);line-height:1.6;font-size:16px}.content{padding:26px 28px 30px}
+    .formula-box{display:flex;align-items:center;justify-content:space-between;gap:20px;padding:18px 20px;background:#f8fafc;border:1px solid #e8edf3;border-radius:16px;margin-bottom:22px;flex-wrap:wrap}
+    .formula-main{font-size:30px;font-weight:800}.formula-sub{color:var(--muted);font-size:14px;line-height:1.5;max-width:520px}
+    .grid{display:grid;grid-template-columns:minmax(0,1.45fr) minmax(280px,.8fr);gap:22px;align-items:start}.panel{border:1px solid #e6eaf0;border-radius:18px;background:#fff}.panel-title{padding:16px 18px 0;font-weight:800;font-size:16px}
+    .circuit-area{margin:14px 16px 16px;border-radius:16px;background:#f3f6fa;border:1px solid #e3e8ef;min-height:360px;position:relative;overflow:hidden}.circuit{position:relative;width:100%;height:360px}
+    .wire{position:absolute;background:#525d6c;border-radius:8px}.wire.top{left:17%;right:17%;top:76px;height:5px}.wire.bottom{left:17%;right:17%;bottom:76px;height:5px}.wire.left{left:17%;top:76px;bottom:76px;width:5px}.wire.right{right:17%;top:76px;bottom:76px;width:5px}
+    .battery{position:absolute;left:calc(17% - 25px);top:127px;width:55px;height:105px;display:flex;align-items:center;justify-content:center;gap:8px}.battery .plate.long{width:6px;height:58px;background:#111827;border-radius:3px}.battery .plate.short{width:6px;height:34px;background:#111827;border-radius:3px}
+    .label{position:absolute;padding:6px 9px;border-radius:10px;background:#fff;border:1px solid #dde3eb;font-weight:800;font-size:14px;box-shadow:0 4px 12px rgba(31,41,55,.06)}.label-voltage{left:6%;top:248px;color:var(--blue)}.label-resistance{right:4%;top:248px;color:#9a5d00}
+    .resistor-wrap{position:absolute;right:calc(17% - 66px);top:140px;width:132px;height:78px;display:flex;align-items:center;justify-content:center}.resistor{width:98px;height:34px;border-radius:9px;border:3px solid #8a4b08;background:#f4b63f;box-shadow:0 0 10px rgba(245,158,11,.25);transition:.2s ease;position:relative}.resistor:before,.resistor:after{content:"";position:absolute;top:50%;width:27px;height:5px;background:#525d6c;transform:translateY(-50%)}.resistor:before{left:-30px}.resistor:after{right:-30px}
+    .marker{width:12px;height:12px;border-radius:50%;background:var(--blue);box-shadow:0 0 8px rgba(47,111,237,.65);position:absolute;z-index:5}.direction-note{position:absolute;left:50%;top:22px;transform:translateX(-50%);color:var(--muted);font-size:13px;background:rgba(255,255,255,.9);padding:5px 8px;border-radius:8px;border:1px solid #e1e6ee;white-space:nowrap}
+    .controls{padding:16px 18px 18px}.control{margin-bottom:24px}.control:last-child{margin-bottom:0}.control-head{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:10px;font-weight:800}.pill{background:#eef3fb;border:1px solid #dfe6f0;color:#24467c;border-radius:999px;padding:5px 10px;min-width:78px;text-align:center;font-weight:800}input[type=range]{width:100%;accent-color:var(--blue)}.scale{display:flex;justify-content:space-between;font-size:12px;color:#8a93a2;margin-top:4px}
+    .results{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-top:22px}.result{border:1px solid #e1e6ec;border-radius:15px;padding:14px 12px;background:#fbfcfd}.result-name{color:var(--muted);font-size:12px;margin-bottom:6px}.result-value{font-size:21px;font-weight:800}
+    .note-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:18px}.info-box{border-radius:15px;padding:15px 16px;line-height:1.6;font-size:15px}.info-box.blue{background:var(--blue-soft);border:1px solid #d7e4ff}.info-box.orange{background:var(--orange-soft);border:1px solid #ffe0a3}.box-title{display:block;font-weight:800;margin-bottom:4px}
+    .explanation{margin-top:18px;padding:17px 18px;background:#f8fafc;border-left:4px solid var(--blue);border-radius:12px;line-height:1.65;font-size:15px}.footer-note{margin-top:14px;color:var(--muted);font-size:12px;line-height:1.5}
+    @media (max-width:780px){.widget{padding:12px}.header,.content{padding-left:18px;padding-right:18px}.grid{grid-template-columns:1fr}.results{grid-template-columns:repeat(2,1fr)}.note-grid{grid-template-columns:1fr}h1{font-size:27px}.formula-main{font-size:26px}.direction-note{white-space:normal;text-align:center;width:80%}}
+  </style>
+</head>
+<body>
+  <div class="widget"><div class="lesson-card">
+    <div class="header"><div class="eyebrow">Урок 4 · Электрическая мощность</div><h1>Как напряжение и сопротивление влияют на мощность</h1><p class="intro">Изменяйте параметры цепи и наблюдайте, как меняются ток и мощность. Это помогает увидеть формулу не как набор символов, а как реальный процесс.</p></div>
+    <div class="content">
+      <div class="formula-box"><div class="formula-main">P = V × I</div><div class="formula-sub">Мощность показывает, сколько электрической энергии устройство потребляет или превращает в другие виды энергии за единицу времени.</div></div>
+      <div class="grid">
+        <div class="panel"><div class="panel-title">Схема цепи</div><div class="circuit-area"><div class="circuit" id="circuit"><div class="direction-note">Синие точки показывают условное направление тока</div><div class="wire top"></div><div class="wire bottom"></div><div class="wire left"></div><div class="wire right"></div><div class="battery"><div class="plate long"></div><div class="plate short"></div></div><div class="label label-voltage" id="batteryLabel">12 V</div><div class="resistor-wrap"><div class="resistor" id="resistor"></div></div><div class="label label-resistance" id="resistorLabel">R = 6 Ω</div><div class="marker" id="m1"></div><div class="marker" id="m2"></div><div class="marker" id="m3"></div><div class="marker" id="m4"></div></div></div></div>
+        <div class="panel"><div class="panel-title">Измените параметры</div><div class="controls"><div class="control"><div class="control-head"><span>Напряжение V</span><span class="pill" id="voltageValue">12 V</span></div><input id="voltage" type="range" min="1" max="24" step="1" value="12"><div class="scale"><span>1 V</span><span>24 V</span></div></div><div class="control"><div class="control-head"><span>Сопротивление R</span><span class="pill" id="resistanceValue">6 Ω</span></div><input id="resistance" type="range" min="1" max="24" step="1" value="6"><div class="scale"><span>1 Ω</span><span>24 Ω</span></div></div></div></div>
+      </div>
+      <div class="results"><div class="result"><div class="result-name">Напряжение</div><div class="result-value" id="outV">12 V</div></div><div class="result"><div class="result-name">Сопротивление</div><div class="result-value" id="outR">6 Ω</div></div><div class="result"><div class="result-name">Ток</div><div class="result-value" id="outI">2.00 A</div></div><div class="result"><div class="result-name">Мощность</div><div class="result-value" id="outP">24.00 W</div></div></div>
+      <div class="note-grid"><div class="info-box blue"><span class="box-title">Что меняется?</span>При уменьшении сопротивления ток растёт. При увеличении напряжения ток тоже растёт. Поэтому меняется и мощность, выделяемая на резисторе.</div><div class="info-box orange"><span class="box-title">Попробуйте сами</span>Установите <strong>19 V</strong> и <strong>10 Ω</strong>. Посмотрите, какой ток потечёт через цепь и какая мощность выделится на резисторе.</div></div>
+      <div class="explanation" id="explanation">При напряжении 12 В и сопротивлении 6 Ω сила тока составляет 2 А, а мощность, рассеиваемая на резисторе, — 24 Вт. Чем больше мощность, тем сильнее визуально нагревается резистор.</div>
+      <div class="footer-note">Учебная модель упрощена: она показывает идеальную цепь постоянного тока с одним резистором и не учитывает реальные потери, допуски компонентов и нагрев проводников.</div>
+    </div>
+  </div></div>
+  <script>
+    const voltage=document.getElementById('voltage'), resistance=document.getElementById('resistance');
+    const voltageValue=document.getElementById('voltageValue'), resistanceValue=document.getElementById('resistanceValue');
+    const outV=document.getElementById('outV'), outR=document.getElementById('outR'), outI=document.getElementById('outI'), outP=document.getElementById('outP');
+    const batteryLabel=document.getElementById('batteryLabel'), resistorLabel=document.getElementById('resistorLabel'), resistor=document.getElementById('resistor'), explanation=document.getElementById('explanation');
+    const markers=['m1','m2','m3','m4'].map(id=>document.getElementById(id)); let phase=[0,.25,.5,.75], animationSpeed=.002;
+    function getPathPoint(t,width,height){const left=width*.17,right=width*.83,top=76,bottom=height-76,w=right-left,h=bottom-top,perimeter=2*(w+h);let d=(t%1)*perimeter;if(d<w)return{x:left+d,y:top};d-=w;if(d<h)return{x:right,y:top+d};d-=h;if(d<w)return{x:right-d,y:bottom};d-=w;return{x:left,y:bottom-d}}
+    function fc(i){return i<10?i.toFixed(2):i.toFixed(1)} function fp(p){return p<100?p.toFixed(2):p.toFixed(1)}
+    function update(){const V=Number(voltage.value),R=Number(resistance.value),I=V/R,P=V*I;voltageValue.textContent=`${V} V`;resistanceValue.textContent=`${R} Ω`;outV.textContent=`${V} V`;outR.textContent=`${R} Ω`;outI.textContent=`${fc(I)} A`;outP.textContent=`${fp(P)} W`;batteryLabel.textContent=`${V} V`;resistorLabel.textContent=`R = ${R} Ω`;const heat=Math.min(P/160,1),glow=8+heat*34,r=Math.round(244+heat*10),g=Math.round(182-heat*110),b=Math.round(63-heat*45);resistor.style.background=`rgb(${r},${g},${b})`;resistor.style.boxShadow=`0 0 ${glow}px rgba(245,122,22,${.22+heat*.58})`;animationSpeed=.0015+Math.min(I/12,1)*.0065;explanation.innerHTML=`При напряжении <strong>${V} В</strong> и сопротивлении <strong>${R} Ω</strong> сила тока составляет <strong>${fc(I)} А</strong>, а мощность, рассеиваемая на резисторе, — <strong>${fp(P)} Вт</strong>. Чем больше мощность, тем сильнее визуально нагревается резистор.`}
+    function animate(){const circuit=document.getElementById('circuit'),width=circuit.clientWidth,height=circuit.clientHeight;markers.forEach((marker,i)=>{phase[i]+=animationSpeed;const p=getPathPoint(phase[i],width,height);marker.style.left=`${p.x-6}px`;marker.style.top=`${p.y-6}px`});requestAnimationFrame(animate)}
+    voltage.addEventListener('input',update);resistance.addEventListener('input',update);update();animate();
+  </script>
+</body>
+</html>
